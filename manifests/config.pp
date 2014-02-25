@@ -61,7 +61,7 @@ define php5fpm::config (
   }
 
   $real_content = $content ? {
-    ''      => "php5fpm/pool.d/${name}.conf.erb",
+    ''      => "php5fpm/pool.d/www-pool.conf.erb",
     default => $content,
   }
 
