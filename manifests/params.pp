@@ -118,6 +118,5 @@ class php5fpm::params {
   $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
-  $noops = false
 
 }
