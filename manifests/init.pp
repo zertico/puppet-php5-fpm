@@ -125,11 +125,6 @@
 #   Can be defined also by the (top scope) variables $php5fpm_audit_only
 #   and $audit_only
 #
-# [*noops*]
-#   Set noop metaparameter to true for all the resources managed by the module.
-#   Basically you can run a dryrun for this specific module if you set
-#   this to true. Default: false
-#
 # Default class params - As defined in php5fpm::params.
 # Note that these variables are mostly defined and used in the module itself,
 # overriding the default values might not affected all the involved components.
@@ -222,7 +217,6 @@ class php5fpm (
   $firewall_dst        = params_lookup( 'firewall_dst' , 'global' ),
   $debug               = params_lookup( 'debug' , 'global' ),
   $audit_only          = params_lookup( 'audit_only' , 'global' ),
-  $noops               = params_lookup( 'noops' ),
   $package             = params_lookup( 'package' ),
   $service             = params_lookup( 'service' ),
   $service_status      = params_lookup( 'service_status' ),
@@ -253,7 +247,6 @@ class php5fpm (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
-  $bool_noops=any2bool($noops)
 
   ### Definition of some variables used in the module
   $manage_package = $php5fpm::bool_absent ? {
@@ -328,7 +321,6 @@ class php5fpm (
   ### Managed resources
   package { $php5fpm::package:
     ensure  => $php5fpm::manage_package,
-    noop    => $php5fpm::bool_noops,
   }
 
   service { 'php5fpm':
@@ -338,7 +330,6 @@ class php5fpm (
     hasstatus  => $php5fpm::service_status,
     pattern    => $php5fpm::process,
     require    => Package[$php5fpm::package],
-    noop       => $php5fpm::bool_noops,
   }
 
   file { 'php5fpm.conf':
@@ -353,7 +344,6 @@ class php5fpm (
     content => $php5fpm::manage_file_content,
     replace => $php5fpm::manage_file_replace,
     audit   => $php5fpm::manage_audit,
-    noop    => $php5fpm::bool_noops,
   }
 
   file { 'php5fpm.logdir':
@@ -378,7 +368,6 @@ class php5fpm (
       force   => $php5fpm::bool_source_dir_purge,
       replace => $php5fpm::manage_file_replace,
       audit   => $php5fpm::manage_audit,
-      noop    => $php5fpm::bool_noops,
     }
   }
 
@@ -396,7 +385,6 @@ class php5fpm (
       ensure    => $php5fpm::manage_file,
       variables => $classvars,
       helper    => $php5fpm::puppi_helper,
-      noop      => $php5fpm::bool_noops,
     }
   }
 
@@ -410,7 +398,6 @@ class php5fpm (
         target   => $php5fpm::monitor_target,
         tool     => $php5fpm::monitor_tool,
         enable   => $php5fpm::manage_monitor,
-        noop     => $php5fpm::bool_noops,
       }
     }
     if $php5fpm::service != '' {
@@ -422,7 +409,6 @@ class php5fpm (
         argument => $php5fpm::process_args,
         tool     => $php5fpm::monitor_tool,
         enable   => $php5fpm::manage_monitor,
-        noop     => $php5fpm::bool_noops,
       }
     }
   }
@@ -439,7 +425,6 @@ class php5fpm (
       direction   => 'input',
       tool        => $php5fpm::firewall_tool,
       enable      => $php5fpm::manage_firewall,
-      noop        => $php5fpm::bool_noops,
     }
   }
 
@@ -453,7 +438,6 @@ class php5fpm (
       owner   => 'root',
       group   => 'root',
       content => inline_template('<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*|.*psk.*|.*key)/ }.to_yaml %>'),
-      noop    => $php5fpm::bool_noops,
     }
   }
 
