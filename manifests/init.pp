@@ -234,7 +234,8 @@ class php5fpm (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $protocol            = params_lookup( 'protocol' ),
+  $config_hash         = params_lookup( 'config_hash'),
   ) inherits php5fpm::params {
 
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -247,6 +248,12 @@ class php5fpm (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+
+  ## Integration with Hiera
+  if $config_hash != {} {
+    validate_hash($config_hash)
+    create_resources('php5fpm::config', $config_hash)
+  }
 
   ### Definition of some variables used in the module
   $manage_package = $php5fpm::bool_absent ? {
