@@ -251,7 +251,10 @@ class php5fpm (
   ### Definition of some variables used in the module
   $manage_package = $php5fpm::bool_absent ? {
     true  => 'absent',
-    false => $php5fpm::version,
+    false => $php5fpm::version ? {
+        ''      => 'present',
+        default => $php5fpm::version,
+    },
   }
 
   $manage_service_enable = $php5fpm::bool_disableboot ? {
@@ -319,8 +322,9 @@ class php5fpm (
   }
 
   ### Managed resources
-  package { $php5fpm::package:
-    ensure  => $php5fpm::manage_package,
+  package { 'php5fpm':
+    ensure => $php5fpm::manage_package,
+    name   => $php5fpm::package,
   }
 
   service { 'php5fpm':

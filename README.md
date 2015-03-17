@@ -113,4 +113,4 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 
 ## CONTINUOUS TESTING
 
-Travis {<img src="https://travis-ci.org/example42/puppet-php5fpm.png?branch=master" alt="Build Status" />}[https://travis-ci.org/example42/puppet-php5fpm]
+[![Build Status](https://travis-ci.org/zertico/puppet-php5fpm.png?branch=master)](https://travis-ci.org/zertico/puppet-php5fpm)
