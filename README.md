@@ -4,9 +4,13 @@ This is a Puppet module for php5fpm based on the second generation layout ("Next
 
 Made by Alessandro Franceschi / Lab42
 
+Maintained by [Zertico](http://www.zertico.com/): http://www.zertico.com
+
 Official site: http://www.example42.com
 
-Official git repository: http://github.com/example42/puppet-php5fpm
+Official git repository: http://github.com/zertico/puppet-php5fpm
+
+The php5fpm::config code is a fort of https://github.com/BenoitCattie/puppet-php5-fpm
 
 Released under the terms of Apache 2 License.
 
@@ -20,6 +24,10 @@ For detailed info about the logic and usage patterns of Example42 modules check 
 * Install php5fpm with default settings
 
         class { 'php5fpm': }
+
+* Creating a PHP5-FPM pool config with default configuration:
+
+        php5fpm::config { 'example.com': }
 
 * Install a specific version of php5fpm package
 
