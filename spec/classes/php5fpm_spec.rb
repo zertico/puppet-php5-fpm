@@ -59,17 +59,6 @@ describe 'php5fpm' do
     it { should contain_firewall('php5fpm_tcp_42').with_enable('true') }
   end
 
-  #describe 'Test noops mode' do
-  #  let(:params) { {:noops => true, :monitor => true , :firewall => true, :port => '42', :protocol => 'tcp'} }
-  #  it { should contain_package('php5fpm').with_noop('true') }
-  #  it { should contain_service('php5fpm').with_noop('true') }
-  #  it { should contain_file('php5fpm.conf').with_noop('true') }
-  #  it { should contain_monitor__process('php5fpm_process').with_noop('true') }
-  #  it { should contain_monitor__process('php5fpm_process').with_noop('true') }
-  #  it { should contain_monitor__port('php5fpm_tcp_42').with_noop('true') }
-  #  it { should contain_firewall('php5fpm_tcp_42').with_noop('true') }
-  #end
-
   describe 'Test customizations - template' do
     let(:params) { {:template => "php5fpm/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
 

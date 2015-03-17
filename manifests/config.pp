@@ -38,7 +38,7 @@ define php5fpm::config (
   $pm_max_spare_servers      = '35',
   $pm_min_spare_servers      = '5',
   $pm_start_servers          = '20',
-  $process_manager           = "static",
+  $process_manager           = 'static',
   $request_slowlog_timeout   = '0',
   ) {
 
@@ -56,19 +56,19 @@ define php5fpm::config (
   }
 
   $real_poolname = $owner ? {
-    ''      => "www",
+    ''      => 'www',
     default => $real_owner,
   }
 
   $real_content = $content ? {
-    ''      => "php5fpm/pool.d/www-pool.conf.erb",
+    ''      => 'php5fpm/pool.d/www-pool.conf.erb',
     default => $content,
   }
 
   file { "${order}-${name}.conf":
     ensure  => $ensure,
     path    => "${php5fpm::config_dir}/pool.d/${order}-${name}.conf",
-    content => template("${real_content}"),
+    content => template($real_content),
     mode    => '0644',
     owner   => root,
     group   => root,
@@ -77,19 +77,19 @@ define php5fpm::config (
   }
 
   file { "php5-fpm-${name}.log.slow":
-    ensure      => $ensure,
-    path        => "${php5fpm::log_dir}/php5-fpm-${name}.log.slow",
-    mode        => '0664',
-    owner       => $real_owner,
-    group       => $real_groupowner,
-    notify      => Service[$php5fpm::service],
-    require     => File[$php5fpm::log_dir],
+    ensure  => $ensure,
+    path    => "${php5fpm::log_dir}/php5-fpm-${name}.log.slow",
+    mode    => '0664',
+    owner   => $real_owner,
+    group   => $real_groupowner,
+    notify  => Service[$php5fpm::service],
+    require => File[$php5fpm::log_dir],
   }
 
   # Cleans up configs not managed by php5-fpm module
   exec { "cleanup-pool-${name}":
     cwd     => "${php5fpm::config_dir}/pool.d/",
-    path    => "/usr/bin:/usr/sbin:/bin",
+    path    => '/usr/bin:/usr/sbin:/bin',
     command => "find -name '[^0-9]*.conf' -exec rm {} +",
     unless  => "test -z $(find -name '[^0-9]*.conf')",
     notify  => Service[$php5fpm::service],

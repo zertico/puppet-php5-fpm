@@ -328,12 +328,12 @@ class php5fpm (
   }
 
   service { 'php5fpm':
-    ensure     => $php5fpm::manage_service_ensure,
-    name       => $php5fpm::service,
-    enable     => $php5fpm::manage_service_enable,
-    hasstatus  => $php5fpm::service_status,
-    pattern    => $php5fpm::process,
-    require    => Package[$php5fpm::package],
+    ensure    => $php5fpm::manage_service_ensure,
+    name      => $php5fpm::service,
+    enable    => $php5fpm::manage_service_enable,
+    hasstatus => $php5fpm::service_status,
+    pattern   => $php5fpm::process,
+    require   => Package[$php5fpm::package],
   }
 
   file { 'php5fpm.conf':
