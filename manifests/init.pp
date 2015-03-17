@@ -234,7 +234,8 @@ class php5fpm (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $protocol            = params_lookup( 'protocol' ),
+  $config_hash         = params_lookup( 'config_hash'),
   ) inherits php5fpm::params {
 
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -248,10 +249,19 @@ class php5fpm (
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
 
+  ## Integration with Hiera
+  if $config_hash != {} {
+    validate_hash($config_hash)
+    create_resources('php5fpm::config', $config_hash)
+  }
+
   ### Definition of some variables used in the module
   $manage_package = $php5fpm::bool_absent ? {
     true  => 'absent',
-    false => $php5fpm::version,
+    false => $php5fpm::version ? {
+        ''      => 'present',
+        default => $php5fpm::version,
+    },
   }
 
   $manage_service_enable = $php5fpm::bool_disableboot ? {
@@ -319,17 +329,18 @@ class php5fpm (
   }
 
   ### Managed resources
-  package { $php5fpm::package:
-    ensure  => $php5fpm::manage_package,
+  package { 'php5fpm':
+    ensure => $php5fpm::manage_package,
+    name   => $php5fpm::package,
   }
 
   service { 'php5fpm':
-    ensure     => $php5fpm::manage_service_ensure,
-    name       => $php5fpm::service,
-    enable     => $php5fpm::manage_service_enable,
-    hasstatus  => $php5fpm::service_status,
-    pattern    => $php5fpm::process,
-    require    => Package[$php5fpm::package],
+    ensure    => $php5fpm::manage_service_ensure,
+    name      => $php5fpm::service,
+    enable    => $php5fpm::manage_service_enable,
+    hasstatus => $php5fpm::service_status,
+    pattern   => $php5fpm::process,
+    require   => Package[$php5fpm::package],
   }
 
   file { 'php5fpm.conf':
