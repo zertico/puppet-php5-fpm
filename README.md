@@ -59,6 +59,25 @@ For detailed info about the logic and usage patterns of Example42 modules check 
           noops => true
         }
 
+## USAGE - Hiera Support
+* Manage php5-fpm configuration using Hiera
+
+```yaml
+php5fpm::template: 'modules/php5fpm/php.ini.erb'
+php5fpm::options:
+  memory_limit: '128M'
+  upload_max_filesize: '32M'
+```
+
+* Defining php5-fpm resources using Hiera
+
+```yaml
+php5fpm::config_hash:
+  'zertico.com':
+    ensure: present
+    owner: 'zertico.com'
+    memory_limit: '256M'
+```
 
 ## USAGE - Overrides and Customizations
 * Use custom sources for main config file 
