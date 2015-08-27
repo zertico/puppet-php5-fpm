@@ -236,7 +236,11 @@ slowlog = /var/log/php5-fpm/php5-fpm-<%= real_poolname %>.log.slow
 ;env[TMP] = /tmp
 ;env[TMPDIR] = /tmp
 ;env[TEMP] = /tmp
-
+<% if setenv != [] -%>
+<% setenv.each_pair do |key, value| -%>
+env[<%= key %>] = '<%= value %>'
+<% end -%>
+<% end -%>
 ; Additional php.ini defines, specific to this pool of workers.
 ; These settings overwrite the values previously defined in the php.ini.
 ; The directives are the same as the php sapi:

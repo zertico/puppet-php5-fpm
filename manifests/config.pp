@@ -40,6 +40,7 @@ define php5fpm::config (
   $pm_start_servers          = '20',
   $process_manager           = 'static',
   $request_slowlog_timeout   = '0',
+  $setenv                    = [],
   ) {
 
   include php5fpm
